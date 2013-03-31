@@ -91,6 +91,9 @@ static	channel_t		*freelist = NULL;
 int						s_rawend[MAX_RAW_STREAMS];
 portable_samplepair_t s_rawsamples[MAX_RAW_STREAMS][MAX_RAW_SAMPLES];
 
+#ifdef USE_SOUNDHAX
+unsigned short ignoredHash[16384];
+#endif
 
 // ====================================================================
 // User-setable variables
@@ -503,6 +506,42 @@ void S_Base_StartSound(vec3_t origin, int entityNum, int entchannel, sfxHandle_t
 	if ( !origin && ( entityNum < 0 || entityNum > MAX_GENTITIES ) ) {
 		Com_Error( ERR_DROP, "S_StartSound: bad entitynum %i", entityNum );
 	}
+
+#ifdef USE_SOUNDHAX
+	char *selfEntityIgnoredSounds[] = {
+		"sound/player/male/breathin1.wav",
+		"sound/player/male/breathout1.wav",
+		"sound/player/female/breathin1.wav",
+		"sound/player/female/breathout1.wav",
+		"sound/bandage.wav",
+		"sound/player/bodysplash.wav",
+		"sound/player/dripping.wav",
+		"sound/player/fry.wav",
+		"sound/player/watr_in.wav",
+		"sound/player/watr_out.wav",
+		"sound/player/watr_un.wav",
+		NULL
+	};
+
+	unsigned long sfxCRC;
+
+	if(!s_envSoundEnable->integer) {
+		sfx = &s_knownSfx [ sfxHandle ];
+
+		sfxCRC = crc32(1337, (unsigned char *) sfx->soundName,
+						strlen(sfx->soundName)) & 0xffff;
+
+		if ( ignoredHash[sfxCRC / 16] >> (sfxCRC % 16) & 1 )
+			return;
+
+		if(entityNum == clc.clientNum) {
+			for(i = 0; ; i++) {
+				if ( !selfEntityIgnoredSounds[i] ) break;
+				if ( !Q_stricmp( sfx->soundName, selfEntityIgnoredSounds[i] ) ) return;
+			}
+		}
+	}
+#endif
 
 	if ( sfxHandle < 0 || sfxHandle >= s_numSfx ) {
 		Com_Printf( S_COLOR_YELLOW "S_StartSound: handle %i out of range\n", sfxHandle );
@@ -1553,6 +1592,18 @@ qboolean S_Base_Init( soundInterface_t *si ) {
 	si->MasterGain = S_Base_MasterGain;
 #endif
 
+#ifdef USE_SOUNDHAX
+	unsigned long s_CRC;
+	int i;
+
+	for(i = 0; ; i++) {
+		if ( !s_baseSoundsIgnored[i] ) break;
+
+		s_CRC = crc32(1337, (unsigned char *) s_baseSoundsIgnored[i],
+					strlen(s_baseSoundsIgnored[i])) & 0xffff;
+		ignoredHash[s_CRC / 16] |= 1 << (s_CRC % 16);
+	}
+#endif
 
 #ifndef NO_DMAHD
 	if(dmaHD_Enabled()) return dmaHD_Init(si);
