@@ -78,6 +78,9 @@ cvar_t	*cl_forceavidemo;
 cvar_t	*cl_recordfontsize;
 cvar_t  *cl_showrecordmsg;
 cvar_t  *cl_fillconsole;
+cvar_t  *cl_musicuse;
+cvar_t  *cl_musicsong;
+cvar_t  *cl_musicartist;
 
 cvar_t	*cl_freelook;
 cvar_t	*cl_sensitivity;
@@ -3598,6 +3601,10 @@ void CL_Init( void ) {
 	cl_recordfontsize = Cvar_Get ("cl_recordfontsize","12", 0);
 	cl_showrecordmsg = Cvar_Get("cl_showrecordmsg", "1", 0);
 	cl_fillconsole = Cvar_Get("cl_fillconsole", "0", 0);
+
+	cl_musicuse = Cvar_Get("cl_musicuse", "0", 0);
+	cl_musicsong = Cvar_Get("cl_musicsong", "", CVAR_TEMP);
+	cl_musicartist = Cvar_Get("cl_musicartist", "", CVAR_TEMP);
 
 	rconAddress = Cvar_Get ("rconAddress", "", 0);
 

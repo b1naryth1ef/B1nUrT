@@ -32,6 +32,9 @@ cvar_t		*cl_graphscale;
 cvar_t		*cl_graphshift;
 cvar_t		*cl_recordfontsize;
 cvar_t      *cl_showrecordmsg;
+cvar_t  	*cl_musicuse;
+cvar_t  	*cl_musicsong;
+cvar_t  	*cl_musicartist;
 
 
 /*
@@ -326,6 +329,22 @@ int	SCR_GetBigStringWidth( const char *str ) {
 //===============================================================================
 /*
 =================
+SCR_DrawMusic
+=================
+*/
+void SCR_DrawMusic( void ) {
+	char	string[256];
+
+	if (!cl_musicuse->integer)
+		return;
+
+	sprintf( string, "%s - %s", cl_musicartist->string, cl_musicsong->string );
+	SCR_DrawStringExt( 320 - strlen( string ) * 4,       10, 8, "Song: ", g_color_table[1], qtrue, qfalse );
+	SCR_DrawStringExt( 320 - strlen( string ) * 4 + 48,  10, 8, string, g_color_table[7], qtrue, qfalse );
+}
+
+/*
+=================
 SCR_DrawDemoRecording
 =================
 */
@@ -538,6 +557,7 @@ void SCR_DrawScreenField( stereoFrame_t stereoFrame ) {
 			// always supply STEREO_CENTER as vieworg offset is now done by the engine.
 			CL_CGameRendering(stereoFrame);
 			SCR_DrawDemoRecording();
+			SCR_DrawMusic();
 #ifdef USE_VOIP
 			SCR_DrawVoipMeter();
 #endif
