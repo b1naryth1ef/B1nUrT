@@ -27,9 +27,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // A user mod should never modify this file
 
 #ifdef STANDALONE
-  #define PRODUCT_NAME			"UrtDevs_ioUrT"
-  #define PRODUCT_FULLNAME  		"UrtDevs! ioUrT v4.0.0"
-  #define PRODUCT_DEVELOPER 		"strata & SudoKing"
+  #define PRODUCT_NAME			"B1n_ioUrT"
+  #define PRODUCT_FULLNAME  		"B1nzy ioUrT v4.1.1"
+  #define PRODUCT_DEVELOPER 		"B1naryTh1ef"
   #define BASEGAME			"q3ut4"
   #define CLIENT_WINDOW_TITLE     	"Urban Terror"
   #define CLIENT_WINDOW_MIN_TITLE 	"UrT"
