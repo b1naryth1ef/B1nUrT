@@ -439,8 +439,8 @@ typedef enum {
 	GAME_AUTHSERVER_PACKET,
 	GAME_AUTH_WHOIS,
 	GAME_AUTH_BAN
-#else
-	BOTAI_START_FRAME				// ( int time );
+// #else
+// 	BOTAI_START_FRAME				// ( int time );
 #endif
 } gameExport_t;
 
