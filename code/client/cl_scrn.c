@@ -31,6 +31,7 @@ cvar_t		*cl_graphheight;
 cvar_t		*cl_graphscale;
 cvar_t		*cl_graphshift;
 cvar_t		*cl_recordfontsize;
+cvar_t      *cl_showrecordmsg;
 
 
 /*
@@ -323,7 +324,6 @@ int	SCR_GetBigStringWidth( const char *str ) {
 
 
 //===============================================================================
-
 /*
 =================
 SCR_DrawDemoRecording
@@ -337,7 +337,9 @@ void SCR_DrawDemoRecording( void ) {
 
 	fontsize = cl_recordfontsize->integer;
 
-
+	if (!cl_showrecordmsg->integer) {
+		return;
+	}
 	if ( !clc.demorecording ) {
 		return;
 	}

@@ -59,6 +59,7 @@ console_t	con;
 
 cvar_t		*con_conspeed;
 cvar_t		*con_notifytime;
+cvar_t      *cl_fillconsole;
 
 #define	DEFAULT_CONSOLE_WIDTH	78
 
@@ -543,6 +544,7 @@ void Con_DrawNotify (void)
 	int		time;
 	int		skip;
 	int		currentColor;
+	vec4_t  textcolor;
 
 	currentColor = 7;
 	re.SetColor( g_color_table[currentColor] );
@@ -587,14 +589,18 @@ void Con_DrawNotify (void)
 	// draw the chat line
 	if ( Key_GetCatcher( ) & KEYCATCH_MESSAGE )
 	{
+		textcolor[0] = 255.0/255.0;
+		textcolor[1] = 0.0/255.0;
+		textcolor[2] = 0.0/255.0;
+		textcolor[3] = 1;
 		if (chat_team)
 		{
-			SCR_DrawBigString (8, v, "say_team:", 1.0f, qfalse );
+			SCR_DrawBigStringColor (8, v, "say_team:", textcolor, qfalse );
 			skip = 10;
 		}
 		else
 		{
-			SCR_DrawBigString (8, v, "say:", 1.0f, qfalse );
+			SCR_DrawBigStringColor (8, v, "say:", textcolor, qfalse );
 			skip = 5;
 		}
 
@@ -640,15 +646,21 @@ void Con_DrawSolidConsole( float frac ) {
 		y = 0;
 	}
 	else {
-		SCR_DrawPic( 0, 0, SCREEN_WIDTH, y, cls.consoleShader );
+		if (!cl_fillconsole->integer) {
+			SCR_DrawPic( 0, 0, SCREEN_WIDTH, y, cls.consoleShader );
+		}
 	}
 
 	colorBG[0] = 45.0/255.0;
 	colorBG[1] = 72.0/255.0;
 	colorBG[2] = 92.0/255.0;
 	colorBG[3] = 1;
-	SCR_FillRect( 0, y, SCREEN_WIDTH, 2, colorBG );
-	
+	if (!cl_fillconsole->integer) {
+		SCR_FillRect( 0, y, SCREEN_WIDTH, 2, colorBG );
+	} else {
+		SCR_FillRect( 0, 0, SCREEN_WIDTH, y, colorBG );
+	}
+
 	colorFG[0] = 140.0/255.0;
 	colorFG[1] = 170.0/255.0;
 	colorFG[2] = 183.0/255.0;
